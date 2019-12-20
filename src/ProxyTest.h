@@ -1,0 +1,14 @@
+//
+// Created by adrien on 20/12/19.
+//
+
+#ifndef MINECRAFT_LAUNCH_PROXY_PROXYTEST_H
+#define MINECRAFT_LAUNCH_PROXY_PROXYTEST_H
+
+
+class ProxyTest {
+
+};
+
+
+#endif //MINECRAFT_LAUNCH_PROXY_PROXYTEST_H

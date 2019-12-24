@@ -30,22 +30,16 @@ void Client::readClient() {
         forever {
             if (socket->bytesAvailable() <= 0)
                 break;
-
-            qint32 size = Packet::readVarInt(&socketStream); //Packet size
-
-            QByteArray packetData = socket->read(size);
-            QDataStream packetDataStream(packetData);
-
+            
             if (bridged) {
-                QByteArray sizeData;
-                QDataStream sizeOutput(&sizeData, QIODevice::ReadWrite);
-
-                Packet::writeVarInt(size, &sizeOutput);
-
-                remoteServerSocket.write(sizeData);
-                remoteServerSocket.write(packetData);
+                remoteServerSocket.write(socket->readAll());
                 remoteServerSocket.flush();
             } else {
+                qint32 size = Packet::readVarInt(&socketStream); //Packet size
+
+                QByteArray packetData = socket->read(size);
+                QDataStream packetDataStream(packetData);
+
                 qint32 socketId = Packet::readVarInt(&packetDataStream);
 
                 if (currentPackets != nullptr) {
@@ -121,18 +115,8 @@ void Client::readRemoteServer() {
             if (remoteServerSocket.bytesAvailable() <= 0)
                 break;
 
-            qint32 size = Packet::readVarInt(&socketStream); //Packet size
-
-            QByteArray packetData = remoteServerSocket.read(size);
-
             if (bridged) {
-                QByteArray sizeData;
-                QDataStream sizeOutput(&sizeData, QIODevice::ReadWrite);
-
-                Packet::writeVarInt(size, &sizeOutput);
-
-                socket->write(sizeData);
-                socket->write(packetData);
+                socket->write(remoteServerSocket.readAll());
                 socket->flush();
             }
         }

@@ -13,14 +13,23 @@ class Client : public QObject {
     Q_OBJECT
 
 public:
-    Client(QObject *parent, QTcpSocket *socket);
+    Client(QObject *parent, QTcpSocket *socket, const QString& ip, int port);
+    void sendPacket(Packet* packet);
 
 public slots:
     void readClient();
+    void readRemoteServer();
+
+signals:
+    void disconnected();
+    void startServer();
+    void serverStateRequest();
 
 private:
     std::map<int, Packet*>* currentPackets;
     QTcpSocket* socket;
+    QTcpSocket remoteServerSocket;
+    bool bridged;
 };
 
 

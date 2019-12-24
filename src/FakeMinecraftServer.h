@@ -8,6 +8,7 @@
 #include <QObject>
 #include <QTcpSocket>
 #include <QTcpServer>
+#include <QtCore/QProcess>
 #include "Client.h"
 
 class FakeMinecraftServer : public QObject {
@@ -18,10 +19,13 @@ public:
 
 public slots:
     void newConnection();
+    void disconnected();
 
 private:
     QTcpServer *server;
     std::list<Client*> clients;
+    QProcess start_process;
+    QProcess stop_process;
 };
 
 

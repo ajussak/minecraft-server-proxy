@@ -17,8 +17,7 @@ qint32 Packet::readVarInt(QDataStream *stream) {
 
         numRead++;
         if (numRead > 5) {
-            qDebug() << "VarInt is too big";
-            exit(1);
+            throw std::length_error("VarInt is too big");
         }
     } while ((read & 0b10000000) != 0);
 
@@ -36,8 +35,7 @@ qint64 Packet::readVarLong(QDataStream *stream) {
 
         numRead++;
         if (numRead > 10) {
-            qDebug() << "VarLong is too big";
-            exit(1);
+            throw std::length_error("VarLong is too big");
         }
     } while ((read & 0b10000000) != 0);
 

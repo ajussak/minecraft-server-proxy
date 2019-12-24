@@ -37,12 +37,18 @@ FakeMinecraftServer::~FakeMinecraftServer() {
 }
 
 void FakeMinecraftServer::newConnection() {
-
     QTcpSocket *socket = server->nextPendingConnection();
 
-    connect(socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
+    auto *client = new Client(this, socket, "mc.hypixel.net", 25565);
 
-    auto *client = new Client(this, socket);
+    connect(client, SIGNAL(disconnected()), this, SLOT(disconnected()));
+
     clients.push_back(client);
+}
+
+void FakeMinecraftServer::disconnected() {
+    auto* client = dynamic_cast<Client *>(sender());
+    clients.remove(client);
+    delete client;
 }
 
